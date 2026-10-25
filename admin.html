@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="/icons/favicon.png">
+<!--RV-ADMIN-HEAD-END-->
+<title>RV Kitchen Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+/* RV Kitchen · Admin panel. Same look as the customer app: light shell, white cards, orange brand. */
+:root{
+  --bg:#F3F2F1; --card:#FFFFFF; --text:#1D1A18; --muted:#6F6862; --line:#E8E4E0; --line2:#F1EEEB;
+  --brand:#E86500; --brand-dark:#B04A00; --brand-ink:#FFFFFF; --brand-soft:#FFEEDB;
+  --ok:#17904F; --ok-soft:#E3F4EA; --bad:#C9301D; --bad-soft:#FBE7E4; --warn-soft:#FFF3D6; --warn:#8A5A00;
+  --font:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px))}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.brand .lg{width:36px;height:36px;border-radius:10px;background:#0B0908;display:grid;place-items:center;overflow:hidden;flex:none}
+.brand .lg img{width:90%}
+.brand b{font-size:16px;font-weight:900;white-space:nowrap}
+.brand small{display:block;font-size:11.5px;color:var(--muted);font-weight:700}
+.tlink{font-weight:800;font-size:14px;padding:8px 10px;border-radius:10px;color:var(--text);text-decoration:none;white-space:nowrap}
+.tlink:hover{background:var(--bg)}
+.tabsbar{background:var(--card);border-bottom:1px solid var(--line)}
+.tabsbar .wrap{display:flex;gap:24px;overflow-x:auto;scrollbar-width:none}
+.tabsbar .wrap::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap}
+.tab{padding:12px 0 10px;font-weight:800;font-size:15px;color:var(--muted);border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:var(--text);border-color:var(--brand)}
+
+main{padding:16px 0 80px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 1px 0 var(--line)}
+.card h2{margin:0 0 12px;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px}
+.card h2 .sub{margin-left:auto;font-size:13px;color:var(--muted);font-weight:700}
+.grid{display:grid;gap:12px}
+.sec{margin-top:12px}
+.hint{color:var(--muted);font-size:13px;font-weight:600}
+.err{background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:11px 13px;font-weight:800;font-size:14px;margin:10px 0 0}
+.okmsg{background:var(--ok-soft);color:var(--ok);border-radius:12px;padding:11px 13px;font-weight:800;font-size:14px;margin:10px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;background:var(--brand);color:var(--brand-ink);font-weight:900;font-size:15px}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
+.btn.sm{height:36px;padding:0 12px;font-size:14px;border-radius:10px}
+.btn.danger{background:var(--card);color:var(--bad);border:1.5px solid #F0C9C3}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:36px;padding:0 14px;border-radius:18px;background:var(--card);border:1.5px solid var(--line);font-weight:800;font-size:14px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--text);border-color:var(--text);color:#fff}
+
+/* sign in */
+.login{max-width:400px;margin:8vh auto 0;text-align:center}
+.login .lg{width:84px;height:84px;border-radius:22px;background:#0B0908;display:grid;place-items:center;margin:0 auto 14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.login .lg img{width:90%}
+.login h1{font-size:24px;font-weight:900;margin:0 0 4px}
+.login form{display:grid;gap:10px;margin-top:18px;text-align:left}
+.fld{display:grid;gap:6px;font-weight:800;font-size:13.5px;color:var(--muted)}
+.fld input,.fld select,.fld textarea{width:100%;height:46px;border:1.5px solid var(--line);border-radius:12px;padding:0 13px;background:var(--card);color:var(--text);font-weight:600;font-size:15.5px}
+.fld textarea{height:auto;min-height:64px;padding:10px 13px;resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.steps{margin:10px 0 0;padding-left:20px;text-align:left;font-weight:600;font-size:14px;line-height:1.6}
+
+/* at a glance */
+.glance{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gl{text-align:left;background:var(--card);border-radius:16px;padding:14px;border:2px solid transparent;box-shadow:0 1px 0 var(--line)}
+.gl[aria-pressed="true"]{border-color:var(--brand)}
+.gl small{display:block;font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.gl b{display:block;font-size:22px;font-weight:900;margin-top:4px;letter-spacing:-.3px}
+.gl span{display:block;font-size:13.5px;font-weight:700;color:var(--muted)}
+
+/* period navigator */
+.pbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--bg);border-radius:12px;padding:3px}
+.seg button{height:36px;padding:0 14px;border-radius:9px;font-weight:800;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav button{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);display:grid;place-items:center;background:var(--card)}
+.nav button[disabled]{opacity:.35;cursor:default}
+.nav .lbl{font-weight:900;font-size:15px;min-width:150px;text-align:center}
+
+/* KPI tiles */
+.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpi small{display:block;font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.kpi b{display:block;font-size:26px;font-weight:900;margin-top:2px;letter-spacing:-.4px}
+.kpi .dl{font-size:13px;font-weight:800;margin-top:2px;display:flex;align-items:center;gap:4px;color:var(--muted)}
+.kpi .dl.up{color:var(--ok)} .kpi .dl.down{color:var(--bad)}
+.kpi .foot{font-size:12.5px;font-weight:700;color:var(--muted);margin-top:4px}
+
+/* bar chart: one series, metric switch, hover/tap tooltip */
+.chart{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:200px auto;column-gap:8px}
+.yax{position:relative;font-size:11.5px;color:var(--muted);font-weight:700;text-align:right;min-width:34px}
+.yax span{position:absolute;right:0;transform:translateY(50%)}
+.plot{position:relative;border-bottom:1px solid #CFC8C2}
+.plot .gl-line{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}
+.cols{position:absolute;inset:0;display:flex;align-items:flex-end;gap:2px}
+.col{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;min-width:0;position:relative}
+.col .bar{width:100%;max-width:38px;background:var(--brand);border-radius:4px 4px 0 0;min-height:0}
+.col:hover .bar,.col:focus-visible .bar,.col.on .bar{background:var(--brand-dark)}
+.xax{grid-column:2;display:flex;gap:2px;font-size:11px;color:var(--muted);font-weight:700;padding-top:6px}
+.xax span{flex:1;text-align:center;min-width:0;white-space:nowrap;overflow:visible}
+.tip{position:absolute;z-index:5;background:var(--text);color:#fff;border-radius:10px;padding:8px 10px;font-size:13px;font-weight:700;white-space:nowrap;pointer-events:none;transform:translate(-50%,-100%);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.tip b{display:block;font-weight:900}
+.empty{padding:26px 8px;text-align:center;color:var(--muted);font-weight:700}
+
+/* breakdown lists */
+.brk{display:grid;gap:10px}
+.brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center}
+.brow .nm{font-weight:800;font-size:14.5px}
+.brow .vl{font-weight:800;font-size:14px;text-align:right}
+.brow .vl small{color:var(--muted);font-weight:700;margin-left:6px}
+.brow .track{grid-column:1/-1;height:8px;background:var(--line2);border-radius:4px;overflow:hidden}
+.brow .track i{display:block;height:100%;background:var(--brand);border-radius:4px}
+
+/* table */
+.tablewrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
+th{text-align:left;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:8px 8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line2);vertical-align:top;font-weight:600}
+td.r,th.r{text-align:right}
+td{white-space:nowrap}
+td .its{color:var(--muted);font-size:13px;max-width:280px;white-space:normal;min-width:180px}
+.st{font-size:12px;font-weight:900;border-radius:6px;padding:3px 8px;white-space:nowrap;display:inline-block}
+.st.pend,.st.prep{background:var(--brand-soft);color:var(--brand-dark)}
+.st.listo{background:var(--warn-soft);color:var(--warn)}
+.st.entregado{background:var(--ok-soft);color:var(--ok)}
+.st.cancelado{background:var(--bad-soft);color:var(--bad)}
+.tag{font-size:12px;font-weight:800;color:var(--muted)}
+.skel{height:120px;border-radius:12px;background:linear-gradient(90deg,#ece9e6,#f6f4f2,#ece9e6);background-size:200% 100%}
+
+/* slideshow editor */
+.preview{position:relative;aspect-ratio:2/1;border-radius:14px;overflow:hidden;background:#0B0908}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s ease}
+.slide.on{opacity:1}
+.slide::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0) 62%)}
+.slide-cap{position:absolute;left:16px;right:70px;bottom:14px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.slide-cap b{display:block;font-size:19px;font-weight:900;line-height:1.15}
+.slide-cap span{display:block;margin-top:3px;font-size:13px;font-weight:700;opacity:.94}
+.slide-tag{position:absolute;top:12px;left:12px;background:var(--brand);color:#fff;font-size:11px;font-weight:900;letter-spacing:.5px;border-radius:7px;padding:4px 8px;text-transform:uppercase}
+.pdots{position:absolute;right:14px;bottom:16px;display:flex;gap:7px}
+.pdots i{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.5)}
+.pdots i.on{width:26px;background:#fff}
+.slist{display:grid;gap:12px}
+.scard{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;background:var(--card);border-radius:16px;padding:14px;box-shadow:0 1px 0 var(--line)}
+.scard.off{opacity:.62}
+.sthumb{position:relative;aspect-ratio:2/1;border-radius:10px;background:#0B0908 center/cover no-repeat;overflow:hidden}
+.sthumb .n{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.65);color:#fff;font-weight:900;font-size:12px;border-radius:6px;padding:2px 7px}
+.sfields{display:grid;gap:10px;min-width:0}
+.srow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.toggle .sw{width:42px;height:24px;border-radius:12px;background:#CFC8C2;position:relative;transition:background .15s}
+.toggle .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s}
+.toggle[aria-checked="true"] .sw{background:var(--ok)}
+.toggle[aria-checked="true"] .sw::after{transform:translateX(18px)}
+.icon-b{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);display:grid;place-items:center;background:var(--card)}
+.icon-b[disabled]{opacity:.35;cursor:default}
+.savebar{position:sticky;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));margin-top:16px}
+.savebar .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.savebar .msg{margin-right:auto;font-weight:800;font-size:14px;color:var(--muted)}
+.savebar .msg.dirty{color:var(--brand-dark)}
+.demo{background:#FFF3D6;color:#6B4700;font-size:12.5px;font-weight:800;text-align:center;padding:6px 16px}
+
+/* inventory */
+.chip-st{font-size:12px;font-weight:900;border-radius:6px;padding:3px 8px;white-space:nowrap;display:inline-block}
+.chip-st.ok{background:var(--ok-soft);color:var(--ok)} .chip-st.low{background:var(--warn-soft);color:var(--warn)} .chip-st.out{background:var(--bad-soft);color:var(--bad)} .chip-st.nc{background:var(--line2);color:var(--muted)}
+.stockn{font-size:18px;font-weight:900}
+.stockn.neg{color:var(--bad)}
+.minirow{display:flex;gap:6px;flex-wrap:wrap}
+.inline{background:var(--bg);border-radius:12px;padding:12px;margin-top:8px;display:grid;gap:10px}
+.inline .fld input,.inline .fld select{height:42px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.rec{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line2)}
+.rec:first-child{border-top:0}
+.rec .nm{font-weight:800}
+.rec .uses{grid-column:1/-1;color:var(--muted);font-size:13px;font-weight:700}
+.recline{display:grid;grid-template-columns:minmax(0,1fr) 110px auto;gap:8px;align-items:end}
+.recline .u{font-size:12px;color:var(--muted);font-weight:800}
+.alerts{display:flex;gap:8px;flex-wrap:wrap}
+.logrow{display:grid;grid-template-columns:120px minmax(0,1fr);gap:4px 12px;padding:10px 0;border-top:1px solid var(--line2);font-size:14px}
+.logrow:first-child{border-top:0}
+.logrow .w{color:var(--muted);font-weight:700;font-size:13px}
+.logrow .ch{color:var(--muted);font-weight:600;font-size:13px}
+@media (max-width:759px){.logrow{grid-template-columns:1fr}.recline{grid-template-columns:minmax(0,1fr) 90px auto}}
+@media (min-width:760px){
+  .glance{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .two{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .chart{grid-template-rows:240px auto}
+  .preview{aspect-ratio:16/6}
+  .slide-cap b{font-size:24px}
+}
+@media (max-width:759px){
+  .two>*+*{margin-top:12px}
+  .nav{margin-left:0;width:100%;justify-content:space-between}
+  .nav .lbl{min-width:0;flex:1}
+  .scard{grid-template-columns:1fr}
+  .tlink.hide-s{display:none}
+}
+@media (prefers-reduced-motion:reduce){.slide{transition:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<!--RV-ADMIN-DEMO-->
+<script>
+/* ============ RV Kitchen · admin panel ============
+   Talks to server.js → /api/admin/* with the access code (x-rv-code header).
+   If window.RV_ADMIN_DEMO exists (demo build), it uses that instead. */
+const DEMO = window.RV_ADMIN_DEMO || null;
+const LOGO = DEMO ? DEMO.logo : '/photos/logo.png';
+let CUSTOMER_URL = DEMO ? DEMO.customerUrl : '/pedir';
+let ON_ADMIN_DOMAIN = false;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+store.del('rv_admin_code');                       // old access-code sign-in is no longer used
+let TOKEN = store.get('rv_admin_token') || '';     // stays signed in for 30 days on this device
+
+async function call(method, url, body) {
+  if (DEMO) return DEMO.call(method, url, body);
+  const headers = { 'x-rv-admin': TOKEN };
+  if (body) headers['Content-Type'] = 'application/json';
+  const r = await fetch('/api/admin' + url, { method, headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.error || 'Something went wrong (' + r.status + ').'); e.status = r.status; e.needsCode = !!j.needsCode; throw e; }
+  return j;
+}
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = n => 'RD$ ' + Math.round(n || 0).toLocaleString('en-US');
+const money2 = n => { const v = Math.round((n || 0) * 100) / 100; return 'RD$ ' + v.toLocaleString('en-US', { minimumFractionDigits: Number.isInteger(v) ? 0 : 2, maximumFractionDigits: 2 }); };
+const int = n => Math.round(n || 0).toLocaleString('en-US');
+const D = s => new Date(s + 'T00:00:00Z');
+const ymd = d => d.toISOString().slice(0, 10);
+const addD = (s, n) => { const d = D(s); d.setUTCDate(d.getUTCDate() + n); return ymd(d); };
+const weekStart = s => addD(s, -((D(s).getUTCDay() + 6) % 7));    // weeks start on Monday
+const monthStart = s => s.slice(0, 8) + '01';
+const addM = (s, n) => { const d = D(monthStart(s)); d.setUTCMonth(d.getUTCMonth() + n); return ymd(d); };
+const monthEnd = s => addD(addM(s, 1), -1);
+const fmtD = (s, o) => D(s).toLocaleDateString('en-US', Object.assign({ timeZone: 'UTC' }, o));
+const hourLbl = h => (h % 12 || 12) + (h < 12 ? ' am' : ' pm');
+const PAY = { efectivo: 'Cash', tarjeta: 'Card', transferencia: 'Bank transfer', otro: 'Other' };
+const TYPE = { delivery: 'Delivery', llevar: 'Takeout', aqui: 'Dine-in' };
+const STATUS = { pend: 'New', prep: 'Preparing', listo: 'Ready / on the way', entregado: 'Delivered', cancelado: 'Cancelled' };
+const I = {
+  left: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+  right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
+  up: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
+  down: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  trash: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  photo: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 8"/></svg>',
+  plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+};
+
+/* ---------- state ---------- */
+const A = {
+  authed: false, checking: !!TOKEN, loginErr: '', user: '', defaultPw: false, persistent: true, onRailway: false,
+  pwMsg: '', pwErr: '', pwBusy: false, er: { orders: true, customers: true, err: '', msg: '', busy: false },
+  view: 'sales', today: null, days: [], loadErr: '', ch: 'all',
+  kind: 'day', anchor: null, metric: 'rev',
+  orders: null, ordersErr: '', ordersKey: '',
+  slides: null, items: [], seconds: 4, dirty: false, saving: false, sMsg: '', sErr: '', pv: 0,
+  askDel: -1, askReset: false, showN: 20,
+  custs: null, custErr: '', custQ: '', askPw: '', temp: {},
+  inv: null, invErr: '', invMsg: '', invEdit: null, invMove: null, recEdit: null, recCat: 'all', askInvDel: '', invBusy: false, allOpts: false   // two-tap confirmations (browser pop-ups can be blocked)
+};
+
+/* ---------- sign in ---------- */
+async function startSession() {
+  A.checking = true; render();
+  try {
+    const j = await call('GET', '/ping');
+    if (j.shopUrl) CUSTOMER_URL = j.shopUrl;
+    ON_ADMIN_DOMAIN = !!j.adminDomain;
+    Object.assign(A, { today: j.today, user: j.user, defaultPw: !!j.defaultPassword, persistent: j.persistent !== false, onRailway: !!j.onRailway, authed: true, checking: false });
+    render(); loadSales();
+  } catch (e) {
+    A.checking = false; A.authed = false;
+    if (e.status === 401) { TOKEN = ''; store.del('rv_admin_token'); }
+    else A.loginErr = e.message === 'Failed to fetch' ? 'No connection to the server.' : e.message;
+    render();
+  }
+}
+async function signIn(user, password) {
+  A.loginErr = ''; A.checking = true; render();
+  try {
+    const j = await call('POST', '/login', { user, password });
+    TOKEN = j.token; store.set('rv_admin_token', TOKEN);
+    await startSession();
+  } catch (e) {
+    A.checking = false;
+    A.loginErr = e.status === 401 ? 'Wrong username or password.' : (e.message === 'Failed to fetch' ? 'No connection to the server.' : e.message);
+    render();
+  }
+}
+function signOut() {
+  if (TOKEN) call('POST', '/logout').catch(() => {});
+  store.del('rv_admin_token'); TOKEN = ''; A.authed = false; A.days = []; A.orders = null; A.slides = null; A.custs = null; A.view = 'sales'; render();
+}
+
+function vLogin() {
+  return `<div class="login card"><div class="lg"><img src="${esc(LOGO)}" alt="RV Kitchen"></div>
+    <h1>RV Kitchen Admin</h1><p class="hint">Sales, customers and the specialties slideshow.</p>
+    <form id="loginForm">
+      <label class="fld" for="user">Username<input id="user" autocomplete="username" autocapitalize="characters" value="" placeholder="ADMIN" required></label>
+      <label class="fld" for="pass">Password<input id="pass" type="password" autocomplete="current-password" value="" required></label>
+      ${A.loginErr ? `<p class="err" role="alert">${esc(A.loginErr)}</p>` : ''}
+      <button class="btn" type="submit" ${A.checking ? 'disabled' : ''}>${A.checking ? 'Signing in…' : 'Sign in'}</button>
+    </form>
+    <p class="hint" style="margin-top:12px">${DEMO ? 'Demo: username <b>ADMIN</b>, password <b>Admin01</b>.' : 'You stay signed in on this device for 30 days.'}</p></div>`;
+}
+
+/* ---------- settings ---------- */
+function vSettings() {
+  const er = A.er;
+  return `<div class="card"><h2>Saving your data</h2>
+    ${A.persistent ? `<p class="okmsg" style="margin:0">Everything is saved automatically and permanently: orders, customer accounts, menu, employees and slideshow photos. Restarts and updates don't erase anything.</p>`
+      : `<p class="err" style="margin:0">Your data is saved, but NOT permanently yet. Railway erases it every time the app is updated or restarted.</p>
+        <ol class="steps"><li>Open <b>Railway</b> → your RV Kitchen service.</li><li>Right-click the service (or use the <b>+ New</b> menu) → <b>Volume</b> → attach it with mount path <b>/data</b>.</li><li>Railway restarts the app. Come back here: this box turns green.</li></ol>`}
+  </div>
+  <form class="card sec" id="pwForm"><h2>Admin sign-in</h2>
+    ${A.defaultPw ? '<p class="err" style="margin:0 0 12px">You are still using the starting password. Anyone who knows it can see your sales — please change it.</p>' : ''}
+    <label class="fld" for="pw-user">Username<input id="pw-user" value="${esc(A.user)}" maxlength="40" autocomplete="username"></label>
+    <label class="fld sec" for="pw-cur">Current password<input id="pw-cur" type="password" autocomplete="current-password"></label>
+    <label class="fld sec" for="pw-new">New password<input id="pw-new" type="password" autocomplete="new-password" placeholder="At least 6 characters"></label>
+    ${A.pwErr ? `<p class="err" role="alert">${esc(A.pwErr)}</p>` : ''}${A.pwMsg ? `<p class="okmsg" role="status">${esc(A.pwMsg)}</p>` : ''}
+    <div class="sec"><button class="btn" type="submit" ${A.pwBusy ? 'disabled' : ''}>${A.pwBusy ? 'Saving…' : 'Change password'}</button></div>
+    <p class="hint" style="margin:10px 0 0">Changing it signs out every other phone or computer.</p>
+  </form>
+  <form class="card sec" id="eraseForm"><h2>Start fresh</h2>
+    <p class="hint" style="margin:0 0 12px">Erase test orders and test customer accounts before you open for real. Your menu, prices, photos, employees, settings and slideshow are kept.</p>
+    <div class="srow"><button type="button" class="toggle" role="switch" aria-checked="${er.orders}" data-er="orders"><span class="sw"></span>All orders and sales numbers</button></div>
+    <div class="srow sec"><button type="button" class="toggle" role="switch" aria-checked="${er.customers}" data-er="customers"><span class="sw"></span>All customer accounts</button></div>
+    <label class="fld sec" for="er-confirm"><span>Type <b style="color:var(--text)">ERASE</b> to confirm</span><input id="er-confirm" autocomplete="off" autocapitalize="characters" placeholder="ERASE"></label>
+    ${er.err ? `<p class="err" role="alert">${esc(er.err)}</p>` : ''}${er.msg ? `<p class="okmsg" role="status">${esc(er.msg)}</p>` : ''}
+    <div class="sec"><button class="btn danger" type="submit" ${er.busy || (!er.orders && !er.customers) ? 'disabled' : ''}>${er.busy ? 'Erasing…' : 'Erase now'}</button></div>
+    <p class="hint" style="margin:10px 0 0">This cannot be undone.</p>
+  </form>`;
+}
+
+/* ---------- sales: data ---------- */
+async function loadSales() {
+  A.loadErr = '';
+  try {
+    const j = await call('GET', '/days');
+    A.days = j.days || []; A.today = j.today || A.today;
+    if (!A.anchor) A.anchor = A.today;
+  } catch (e) { A.loadErr = e.status === 401 ? '' : 'Could not load the sales numbers. Check the connection and try again.'; if (e.status === 401) return signOut(); }
+  render(); loadOrders();
+}
+function blank() { return { n: 0, rev: 0, paid: 0, canc: 0, cancRev: 0, items: {}, pay: {}, type: {}, hn: Array(24).fill(0), hr: Array(24).fill(0), online: { n: 0, rev: 0 }, pos: { n: 0, rev: 0 }, byDay: {} }; }
+function addMap(t, m) { for (const k in m) { const e = t[k] || (t[k] = [0, 0]); e[0] += m[k][0]; e[1] += m[k][1]; } }
+function agg(from, to) {
+  const t = blank();
+  for (const day of A.days) {
+    if (day.d < from || day.d > to) continue;
+    for (const c of ['online', 'pos']) {
+      if (A.ch !== 'all' && A.ch !== c) continue;
+      const b = day.ch && day.ch[c]; if (!b) continue;
+      t.n += b.n; t.rev += b.rev; t.paid += b.paid; t.canc += b.canc; t.cancRev += b.cancRev;
+      addMap(t.items, b.items); addMap(t.pay, b.pay); addMap(t.type, b.type);
+      for (let h = 0; h < 24; h++) { t.hn[h] += b.hn[h] || 0; t.hr[h] += b.hr[h] || 0; }
+      t[c].n += b.n; t[c].rev += b.rev;
+      const bd = t.byDay[day.d] || (t.byDay[day.d] = { n: 0, rev: 0 }); bd.n += b.n; bd.rev += b.rev;
+    }
+  }
+  return t;
+}
+const firstDay = () => (A.days[0] && A.days[0].d) || A.today;
+function range(kind, a) {
+  if (kind === 'day') return [a, a];
+  if (kind === 'week') { const s = weekStart(a); return [s, addD(s, 6)]; }
+  if (kind === 'month') return [monthStart(a), monthEnd(a)];
+  return [firstDay(), A.today];
+}
+function shift(kind, a, n) { return kind === 'day' ? addD(a, n) : kind === 'week' ? addD(a, 7 * n) : kind === 'month' ? addM(a, n) : a; }
+function label(kind, a) {
+  if (kind === 'day') return a === A.today ? 'Today · ' + fmtD(a, { month: 'short', day: 'numeric' }) : a === addD(A.today, -1) ? 'Yesterday · ' + fmtD(a, { month: 'short', day: 'numeric' }) : fmtD(a, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  if (kind === 'week') { const [f, t] = range('week', a); return fmtD(f, { month: 'short', day: 'numeric' }) + ' – ' + fmtD(t, { month: 'short', day: 'numeric', year: 'numeric' }); }
+  if (kind === 'month') return fmtD(a, { month: 'long', year: 'numeric' });
+  return 'All time';
+}
+const PREV_WORD = { day: 'previous day', week: 'previous week', month: 'previous month' };
+
+/* ---------- sales: chart ---------- */
+function niceMax(v) { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; }
+const short = v => v >= 1e6 ? (Math.round(v / 1e5) / 10) + 'M' : v >= 1e3 ? (Math.round(v / 100) / 10) + 'k' : String(Math.round(v));
+let BUCKETS = [];
+function buckets(kind, f, t, s) {
+  if (kind === 'day') return s.hr.map((v, h) => ({ tip: hourLbl(h) + ' – ' + hourLbl((h + 1) % 24), x: h % 3 === 0 ? hourLbl(h) : '', rev: v, n: s.hn[h] }));
+  if (kind === 'week' || kind === 'month') {
+    const out = []; for (let d = f; d <= t; d = addD(d, 1)) { const v = s.byDay[d] || { n: 0, rev: 0 }; const dd = D(d).getUTCDate();
+      out.push({ tip: fmtD(d, { weekday: 'short', month: 'short', day: 'numeric' }), x: kind === 'week' ? fmtD(d, { weekday: 'short' }) : (dd === 1 || dd % 5 === 0 ? String(dd) : ''), rev: v.rev, n: v.n }); }
+    return out;
+  }
+  const months = {}; for (const d in s.byDay) { const m = d.slice(0, 7); const e = months[m] || (months[m] = { n: 0, rev: 0 }); e.n += s.byDay[d].n; e.rev += s.byDay[d].rev; }
+  const out = []; let m = monthStart(f); const last = monthStart(t), many = (D(last) - D(m)) / 864e5 > 400;
+  for (let guard = 0; m <= last && guard < 120; m = addM(m, 1), guard++) { const v = months[m.slice(0, 7)] || { n: 0, rev: 0 };
+    out.push({ tip: fmtD(m, { month: 'long', year: 'numeric' }), x: many ? (m.slice(5, 7) === '01' || guard === 0 ? fmtD(m, { month: 'short', year: '2-digit' }) : '') : fmtD(m, { month: 'short' }), rev: v.rev, n: v.n }); }
+  return out.slice(-36);
+}
+function chart(bs) {
+  BUCKETS = bs;
+  const key = A.metric, max = niceMax(Math.max(0, ...bs.map(b => b[key])));
+  if (!bs.some(b => b[key] > 0)) return `<div class="empty">No orders in this period.</div>`;
+  const ticks = [0, 0.5, 1];
+  return `<div class="chart" id="chart">
+    <div class="yax" aria-hidden="true">${ticks.map(p => `<span style="bottom:${p * 100}%">${key === 'rev' ? short(max * p) : int(max * p)}</span>`).join('')}</div>
+    <div class="plot">${ticks.slice(1).map(p => `<div class="gl-line" style="bottom:${p * 100}%"></div>`).join('')}
+      <div class="cols">${bs.map((b, i) => `<button class="col" data-col="${i}" aria-label="${esc(b.tip)}: ${money(b.rev)}, ${b.n} orders"><span class="bar" style="height:${b[key] > 0 ? Math.max(1.5, b[key] / max * 100) : 0}%"></span></button>`).join('')}</div>
+    </div>
+    <div class="xax" aria-hidden="true">${bs.map(b => `<span>${esc(b.x)}</span>`).join('')}</div>
+    <div class="tip" id="tip" hidden></div>
+  </div>`;
+}
+function showTip(col) {
+  const tip = $('#tip'), box = $('#chart'); if (!tip || !box) return;
+  document.querySelectorAll('.col.on').forEach(c => c.classList.remove('on'));
+  if (!col) { tip.hidden = true; return; }
+  const b = BUCKETS[Number(col.dataset.col)]; if (!b) return;
+  col.classList.add('on');
+  tip.innerHTML = `<b>${esc(b.tip)}</b>${money(b.rev)} · ${int(b.n)} order${b.n === 1 ? '' : 's'}`;
+  tip.hidden = false;
+  const r = col.getBoundingClientRect(), br = box.getBoundingClientRect(), bar = col.querySelector('.bar').getBoundingClientRect();
+  let x = r.left + r.width / 2 - br.left; const w = tip.offsetWidth;
+  x = Math.max(w / 2, Math.min(br.width - w / 2, x));
+  tip.style.left = x + 'px'; tip.style.top = Math.max(0, Math.min(bar.top, r.bottom - 10) - br.top - 8) + 'px';
+}
+
+/* ---------- sales: view ---------- */
+function brk(title, map, names, total) {
+  const rows = Object.entries(map).sort((a, b) => b[1][1] - a[1][1]);
+  if (!rows.length) return `<div class="card"><h2>${title}</h2><div class="empty">No data yet.</div></div>`;
+  return `<div class="card"><h2>${title}</h2><div class="brk">${rows.map(([k, v]) => `<div class="brow"><span class="nm">${esc(names[k] || k)}</span><span class="vl num">${money(v[1])}<small>${int(v[0])} order${v[0] === 1 ? '' : 's'}</small></span>
+    <span class="track"><i style="width:${total ? Math.max(1, v[1] / total * 100) : 0}%"></i></span></div>`).join('')}</div></div>`;
+}
+function delta(cur, prev) {
+  if (A.kind === 'all') return '';
+  if (!prev) return cur ? `<div class="dl">New vs ${PREV_WORD[A.kind]}</div>` : `<div class="dl">Same as ${PREV_WORD[A.kind]}</div>`;
+  const p = Math.round((cur - prev) / prev * 100);
+  if (!p) return `<div class="dl">Same as ${PREV_WORD[A.kind]}</div>`;
+  return `<div class="dl ${p > 0 ? 'up' : 'down'}">${p > 0 ? I.up : I.down}${Math.abs(p)}% vs ${PREV_WORD[A.kind]}</div>`;
+}
+function vSales() {
+  if (A.loadErr) return `<div class="card"><p class="err">${esc(A.loadErr)}</p><div style="margin-top:12px"><button class="btn ghost" data-reload>Try again</button></div></div>`;
+  if (!A.anchor) return `<div class="grid glance">${'<div class="skel"></div>'.repeat(4)}</div>`;
+  const T = A.today;
+  const gl = [['day', T, 'Today'], ['week', T, 'This week'], ['month', T, 'This month'], ['all', T, 'All time']].map(([k, a, l]) => {
+    const [f, t] = range(k, a), s = agg(f, t), on = A.kind === k && (k === 'all' || A.anchor === T || range(k, A.anchor)[0] === f);
+    return `<button class="gl" data-glance="${k}" aria-pressed="${on}"><small>${l}</small><b class="num">${money(s.rev)}</b><span class="num">${int(s.n)} order${s.n === 1 ? '' : 's'}</span></button>`;
+  }).join('');
+  const [f, t] = range(A.kind, A.anchor), s = agg(f, t);
+  let pv = null; if (A.kind !== 'all') { const pa = shift(A.kind, A.anchor, -1), [pf, pt] = range(A.kind, pa); pv = agg(pf, pt); }
+  const avg = s.n ? s.rev / s.n : 0, pavg = pv && pv.n ? pv.rev / pv.n : 0;
+  const atEnd = A.kind === 'all' || range(A.kind, A.anchor)[1] >= T, atStart = A.kind === 'all' || range(A.kind, A.anchor)[0] <= firstDay();
+  const items = Object.entries(s.items).sort((a, b) => b[1][0] - a[1][0] || b[1][1] - a[1][1]).slice(0, 10);
+  const chTitle = { day: 'Sales by hour', week: 'Sales by day', month: 'Sales by day', all: 'Sales by month' }[A.kind];
+  return `
+  <div class="chips" role="group" aria-label="Which orders">
+    ${[['all', 'All orders'], ['online', 'Online app'], ['pos', 'Register (in store)']].map(([k, l]) => `<button class="chip" data-ch="${k}" aria-pressed="${A.ch === k}">${l}</button>`).join('')}
+  </div>
+  <div class="grid glance sec">${gl}</div>
+  <div class="card sec">
+    <div class="pbar">
+      <div class="seg" role="group" aria-label="Period">${[['day', 'Day'], ['week', 'Week'], ['month', 'Month'], ['all', 'All']].map(([k, l]) => `<button data-kind="${k}" aria-pressed="${A.kind === k}">${l}</button>`).join('')}</div>
+      <div class="nav"><button data-shift="-1" aria-label="Previous" ${atStart ? 'disabled' : ''}>${I.left}</button><span class="lbl">${esc(label(A.kind, A.anchor))}</span><button data-shift="1" aria-label="Next" ${atEnd ? 'disabled' : ''}>${I.right}</button></div>
+    </div>
+    <div class="grid kpis sec">
+      <div class="kpi"><small>Orders</small><b class="num">${int(s.n)}</b>${pv ? delta(s.n, pv.n) : ''}</div>
+      <div class="kpi"><small>Money in sales</small><b class="num">${money(s.rev)}</b>${pv ? delta(s.rev, pv.rev) : ''}<div class="foot num">Collected ${money(s.paid)}${s.rev - s.paid > 0.5 ? ` · Not paid yet ${money(s.rev - s.paid)}` : ''}</div></div>
+      <div class="kpi"><small>Average order</small><b class="num">${money(avg)}</b>${pv ? delta(avg, pavg) : ''}</div>
+      <div class="kpi"><small>Cancelled</small><b class="num">${int(s.canc)}</b><div class="foot num">${s.canc ? money(s.cancRev) + ' not charged' : 'None'}</div></div>
+    </div>
+  </div>
+  <div class="card sec">
+    <h2>${chTitle}<span class="sub"><span class="seg" role="group" aria-label="Chart shows"><button data-metric="rev" aria-pressed="${A.metric === 'rev'}">Money</button><button data-metric="n" aria-pressed="${A.metric === 'n'}">Orders</button></span></span></h2>
+    ${chart(buckets(A.kind, f, t, s))}
+  </div>
+  <div class="two sec">
+    ${brk('Online app vs register', { online: [s.online.n, s.online.rev], pos: [s.pos.n, s.pos.rev] }, { online: 'Online app', pos: 'Register (in store)' }, s.rev)}
+    ${brk('Payment method', s.pay, PAY, s.rev)}
+    ${brk('Order type', s.type, TYPE, s.rev)}
+  </div>
+  <div class="card sec"><h2>Best sellers<span class="sub">${esc(label(A.kind, A.anchor))}</span></h2>
+    ${items.length ? `<div class="tablewrap"><table style="min-width:0"><thead><tr><th>Item</th><th class="r">Sold</th><th class="r">Sales</th></tr></thead><tbody>
+      ${items.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="r num">${int(v[0])}</td><td class="r num">${money(v[1])}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">No items sold in this period.</div>'}
+  </div>
+  <div class="card sec"><h2>Orders<span class="sub">${A.kind === 'all' ? 'Latest 100' : esc(label(A.kind, A.anchor))}</span></h2>${vOrders()}</div>`;
+}
+function vOrders() {
+  if (A.ordersErr) return `<p class="err">${esc(A.ordersErr)}</p>`;
+  if (!A.orders) return '<div class="skel"></div>';
+  const list = A.orders.filter(o => A.ch === 'all' || o.source === A.ch);
+  if (!list.length) return '<div class="empty">No orders in this period.</div>';
+  const more = list.length - A.showN;
+  return `<div class="tablewrap"><table><thead><tr><th>#</th><th>When</th><th>From</th><th>Customer</th><th>Items</th><th>Payment</th><th>Status</th><th class="r">Total</th></tr></thead><tbody>
+    ${list.slice(0, A.showN).map(o => `<tr><td class="num">${String(o.num || '').padStart(3, '0')}</td>
+      <td class="num">${esc(fmtD(o.day, { month: 'short', day: 'numeric' }))}<br><span class="tag">${esc(new Date(o.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }))}</span></td>
+      <td>${o.source === 'online' ? 'Online app' : 'Register'}<br><span class="tag">${esc(TYPE[o.type] || o.type)}</span></td>
+      <td>${esc(o.name || '—')}</td><td><div class="its">${esc(o.items)}</div></td>
+      <td>${esc(PAY[o.pay] || o.pay || '—')}<br><span class="tag">${o.status === 'cancelado' ? '' : o.paid ? 'Paid' : 'Not paid yet'}</span></td>
+      <td><span class="st ${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span></td>
+      <td class="r num"><b>${money2(o.total)}</b></td></tr>`).join('')}</tbody></table></div>
+    ${more > 0 ? `<div style="margin-top:12px;text-align:center"><button class="btn ghost sm" data-more>Show ${Math.min(20, more)} more</button></div>` : ''}`;
+}
+async function loadOrders() {
+  if (!A.anchor) return;
+  const [f, t] = range(A.kind, A.anchor), key = f + '|' + t;
+  if (A.ordersKey === key && A.orders) return;
+  A.ordersKey = key; A.orders = null; A.ordersErr = ''; A.showN = 20;
+  try {
+    const j = await call('GET', `/orders?from=${f}&to=${t}&limit=100`);
+    if (A.ordersKey !== key) return;
+    A.orders = j.orders || [];
+  } catch (e) { if (A.ordersKey === key) A.ordersErr = 'Could not load the orders.'; }
+  if (A.view === 'sales') render();
+}
+
+/* ---------- slideshow editor ---------- */
+async function loadSlides() {
+  A.sErr = ''; A.sMsg = '';
+  try { const j = await call('GET', '/slides'); A.slides = j.slides || []; A.items = j.items || []; A.seconds = j.seconds || 4; A.dirty = false; }
+  catch (e) { A.sErr = 'Could not load the slideshow.'; A.slides = A.slides || []; }
+  A.pv = 0; render();
+}
+function vSlides() {
+  if (!A.slides) return `<div class="skel"></div>`;
+  const live = A.slides.filter(x => x.active && x.img);
+  const p = live.length ? live[A.pv % live.length] : null;
+  return `
+  <div class="card"><h2>What customers see<span class="sub">Changes every ${A.seconds} seconds</span></h2>
+    <div class="preview" id="preview">${p ? live.map((x, k) => `<div class="slide ${k === A.pv % live.length ? 'on' : ''}" style="background-image:url('${esc(x.img)}')">${x.title || x.sub ? `<div class="slide-cap">${x.title ? `<b>${esc(x.title)}</b>` : ''}${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</div>` : ''}</div>`).join('') + `<span class="slide-tag">Especialidad</span>${live.length > 1 ? `<div class="pdots">${live.map((x, k) => `<i class="${k === A.pv % live.length ? 'on' : ''}"></i>`).join('')}</div>` : ''}`
+      : `<div class="empty" style="color:#fff;padding-top:12%">No slides are switched on. Customers will see the regular cover photo.</div>`}</div>
+    <p class="hint" style="margin:10px 0 0">Titles and subtitles are shown to customers, so write them in Spanish. Tapping a slide can open one of your menu items.</p>
+  </div>
+  <div class="card sec"><div class="srow">
+    <label class="fld" for="secs" style="flex:1;min-width:200px">Seconds per slide<input id="secs" type="number" inputmode="numeric" min="2" max="30" value="${A.seconds}"></label>
+    <button class="btn" data-addslide style="align-self:flex-end">${I.plus}Add slide</button>
+  </div></div>
+  <div class="slist sec">${A.slides.map((x, i) => `
+    <div class="scard ${x.active ? '' : 'off'}" data-i="${i}">
+      <div><div class="sthumb" style="background-image:url('${esc(x.img)}')"><span class="n">${i + 1}</span></div>
+        <div class="srow" style="margin-top:8px"><button class="btn ghost sm" style="width:100%;white-space:nowrap" data-photo="${i}">${I.photo}Change photo</button></div></div>
+      <div class="sfields">
+        <label class="fld" for="t${i}">Title<input id="t${i}" data-f="title" data-i="${i}" maxlength="60" value="${esc(x.title)}" placeholder="Ej.: Combos para compartir"></label>
+        <label class="fld" for="s${i}">Subtitle<input id="s${i}" data-f="sub" data-i="${i}" maxlength="120" value="${esc(x.sub)}" placeholder="Ej.: Hamburguesas, papas y pollo"></label>
+        <label class="fld" for="m${i}">When tapped, open<select id="m${i}" data-f="itemId" data-i="${i}"><option value="">Nothing (just a picture)</option>${A.items.map(m => `<option value="${esc(m.id)}" ${m.id === x.itemId ? 'selected' : ''}>${esc(m.n)}</option>`).join('')}</select></label>
+        <div class="srow">
+          <button class="toggle" role="switch" aria-checked="${x.active}" data-act="${i}"><span class="sw"></span>${x.active ? 'Showing' : 'Hidden'}</button>
+          <span style="margin-left:auto"></span>
+          <button class="icon-b" data-move="${i}" data-d="-1" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>${I.up}</button>
+          <button class="icon-b" data-move="${i}" data-d="1" aria-label="Move down" ${i === A.slides.length - 1 ? 'disabled' : ''}>${I.down}</button>
+          <button class="btn danger sm" data-del="${i}">${I.trash}${A.askDel === i ? 'Tap again to delete' : 'Delete'}</button>
+        </div>
+      </div>
+    </div>`).join('') || '<div class="card"><div class="empty">No slides yet. Tap “Add slide” and pick a photo.</div></div>'}
+  </div>
+  ${A.sErr ? `<p class="err" role="alert">${esc(A.sErr)}</p>` : ''}
+  <div class="card sec"><div class="srow"><span class="hint" style="flex:1">Want the original three slides back?</span><button class="btn ${A.askReset ? 'danger' : 'ghost'} sm" data-resetslides>${A.askReset ? 'Tap again: delete my slides and restore' : 'Restore starter slides'}</button></div></div>
+  <input type="file" id="file" accept="image/*" hidden>`;
+}
+function saveBar() {
+  if (A.view !== 'slides' || !A.slides) return '';
+  return `<div class="savebar"><div class="wrap"><span class="msg ${A.dirty ? 'dirty' : ''}" role="status">${A.saving ? 'Saving…' : A.dirty ? 'You have changes that are not saved yet.' : A.sMsg || 'All changes saved.'}</span>
+    <button class="btn ghost" data-discard ${A.dirty && !A.saving ? '' : 'disabled'}>Discard</button>
+    <button class="btn" data-saveslides ${A.dirty && !A.saving ? '' : 'disabled'}>Save changes</button></div></div>`;
+}
+let pvTimer = null;
+function schedPreview() {
+  clearTimeout(pvTimer);
+  pvTimer = setTimeout(() => {
+    if (A.view === 'slides' && A.slides) {
+      const live = A.slides.filter(x => x.active && x.img);
+      if (live.length > 1) {
+        A.pv = (A.pv + 1) % live.length;
+        const box = $('#preview');
+        if (box) { box.querySelectorAll('.slide').forEach((el, k) => el.classList.toggle('on', k === A.pv)); box.querySelectorAll('.pdots i').forEach((el, k) => el.classList.toggle('on', k === A.pv)); }
+      }
+    }
+    schedPreview();
+  }, Math.min(30, Math.max(2, A.seconds)) * 1000);
+}
+function refreshPreview() { const box = $('#preview'); if (!box) return; const tmp = document.createElement('div'); tmp.innerHTML = vSlides(); box.innerHTML = tmp.querySelector('#preview').innerHTML; }
+function markDirty() { A.dirty = true; A.sMsg = ''; const bar = document.querySelector('.savebar'); if (bar) bar.outerHTML = saveBar(); }
+
+// Photos are shrunk on the phone/computer before upload (max 1600 px wide, JPEG).
+function shrink(file) {
+  return new Promise((ok, bad) => {
+    if (!/^image\//.test(file.type)) return bad(new Error('Pick a photo (JPG or PNG).'));
+    const rd = new FileReader();
+    rd.onerror = () => bad(new Error('Could not read that photo.'));
+    rd.onload = () => {
+      const im = new Image();
+      im.onerror = () => bad(new Error('Could not open that photo.'));
+      im.onload = () => {
+        const sc = Math.min(1, 1600 / im.width), w = Math.round(im.width * sc), h = Math.round(im.height * sc);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(im, 0, 0, w, h);
+        ok(c.toDataURL('image/jpeg', 0.82));
+      };
+      im.src = rd.result;
+    };
+    rd.readAsDataURL(file);
+  });
+}
+let photoFor = null;
+async function onPhoto(file) {
+  try {
+    const data = await shrink(file);
+    if (photoFor === 'new') { A.slides.push({ id: '', title: '', sub: '', itemId: '', active: true, img: data, imgData: data }); }
+    else if (A.slides[photoFor]) { A.slides[photoFor].img = data; A.slides[photoFor].imgData = data; }
+    A.dirty = true; A.sMsg = ''; A.sErr = ''; render();
+    if (photoFor === 'new') { const last = document.querySelector('.scard:last-child input'); if (last) { last.scrollIntoView({ block: 'center' }); last.focus(); } }
+  } catch (e) { A.sErr = e.message; render(); }
+}
+async function saveSlides() {
+  if (A.slides.length > 12) { A.sErr = 'You can have up to 12 slides.'; return render(); }
+  A.saving = true; A.sErr = ''; render();
+  try {
+    await call('PUT', '/slides', { seconds: A.seconds, slides: A.slides.map(x => ({ id: x.id, title: x.title, sub: x.sub, itemId: x.itemId, active: x.active, imgData: x.imgData || undefined })) });
+    A.saving = false; await loadSlides(); A.sMsg = 'Saved. Customers see the new slideshow now.'; render();
+  } catch (e) { A.saving = false; A.sErr = e.message; render(); }
+}
+
+/* ---------- customers (accounts made in the ordering app) ---------- */
+async function loadCustomers() {
+  A.custErr = '';
+  try { const j = await call('GET', '/customers'); A.custs = j.customers || []; }
+  catch (e) { A.custErr = 'Could not load the customers.'; A.custs = A.custs || []; }
+  if (A.view === 'customers') render();
+}
+function vCustomers() {
+  if (A.custErr) return `<div class="card"><p class="err">${esc(A.custErr)}</p></div>`;
+  if (!A.custs) return '<div class="skel"></div>';
+  const all = A.custs, m0 = monthStart(A.today || ymd(new Date()));
+  const q = A.custQ.trim().toLowerCase(), qd = q.replace(/\D/g, '');
+  const list = all.filter(c => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)) || (c.sector || '').toLowerCase().includes(q));
+  const fmtPhone = p => p.length === 10 ? p.slice(0, 3) + '-' + p.slice(3, 6) + '-' + p.slice(6) : p;
+  return `<div class="grid kpis">
+    <div class="card kpi"><small>Customers</small><b class="num">${int(all.length)}</b></div>
+    <div class="card kpi"><small>New this month</small><b class="num">${int(all.filter(c => (c.createdAt || '').slice(0, 10) >= m0).length)}</b></div>
+    <div class="card kpi"><small>Ordered 2+ times</small><b class="num">${int(all.filter(c => c.orders >= 2).length)}</b></div>
+    <div class="card kpi"><small>Never ordered</small><b class="num">${int(all.filter(c => !c.orders).length)}</b></div>
+  </div>
+  <div class="card sec"><h2>Customer accounts<span class="sub">From the online app</span></h2>
+    <label class="fld" for="cq" style="margin-bottom:12px">Search<input id="cq" type="search" value="${esc(A.custQ)}" placeholder="Name, phone or sector" autocomplete="off"></label>
+    ${list.length ? `<div class="tablewrap"><table><thead><tr><th>Name</th><th>Phone / WhatsApp</th><th>Sector</th><th>Joined</th><th class="r">Orders</th><th class="r">Spent</th><th>Last order</th><th>Password</th></tr></thead><tbody>
+    ${list.slice(0, 200).map(c => `<tr><td><b>${esc(c.name)}</b></td>
+      <td class="num"><a href="https://wa.me/1${esc(c.phone)}" target="_blank" rel="noopener" style="color:var(--brand-dark);font-weight:800">${esc(fmtPhone(c.phone))}</a></td>
+      <td>${esc(c.sector || '—')}</td>
+      <td class="num">${c.createdAt ? esc(new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '—'}</td>
+      <td class="r num">${int(c.orders)}</td><td class="r num">${money(c.spent)}</td>
+      <td class="num">${c.last ? esc(new Date(c.last).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })) : '—'}</td>
+      <td>${A.temp[c.id] ? `<b class="num" style="color:var(--ok)">New: ${esc(A.temp[c.id])}</b><br><span class="tag">Give it to the customer</span>` : `<button class="btn ${A.askPw === c.id ? 'danger' : 'ghost'} sm" data-resetpw="${esc(c.id)}">${A.askPw === c.id ? 'Tap again to reset' : 'Reset password'}</button>`}</td></tr>`).join('')}
+    </tbody></table></div>${list.length > 200 ? '<p class="hint">Showing the first 200. Search to find others.</p>' : ''}` : `<div class="empty">${all.length ? 'No customer matches that search.' : 'No customer accounts yet. They appear here when customers sign up in the ordering app.'}</div>`}
+    <p class="hint" style="margin:12px 0 0">If a customer forgets the password, tap <b>Reset password</b> and give them the new 6-digit password (by phone or WhatsApp). They can sign in with it right away.</p>
+  </div>`;
+}
+
+function notice() {
+  if (A.view === 'settings') return '';
+  if (!A.persistent) return `<button class="err" data-view="settings" style="display:block;width:100%;text-align:left;margin:0 0 12px">Your data is not saved permanently yet. Tap here to fix it (2 minutes in Railway).</button>`;
+  if (A.defaultPw && !DEMO) return `<button class="err" data-view="settings" style="display:block;width:100%;text-align:left;margin:0 0 12px">You are using the starting admin password. Tap here to change it.</button>`;
+  return '';
+}
+
+/* ---------- inventory ---------- */
+async function loadInv() {
+  A.invErr = '';
+  try { A.inv = await call('GET', '/inventory'); } catch (e) { A.invErr = 'Could not load the inventory.'; }
+  if (A.view === 'inventory') render();
+}
+async function invCall(method, url, body, msg) {
+  A.invBusy = true; A.invErr = ''; render();
+  try { A.inv = await call(method, url, body); A.invMsg = msg || ''; A.invEdit = null; A.invMove = null; A.recEdit = null; A.askInvDel = ''; }
+  catch (e) { A.invErr = e.message; }
+  A.invBusy = false; render();
+}
+const qtyF = n => { const v = Math.round((Number(n) || 0) * 100) / 100; return v.toLocaleString('en-US', { maximumFractionDigits: 2 }); };
+const ingById = id => (A.inv && A.inv.items.find(g => g.id === id)) || null;
+const usesText = lines => (lines || []).map(l => { const g = ingById(l.inv); return g ? `${qtyF(l.qty)}${g.unit && g.unit !== 'unid' ? ' ' + g.unit : ''} ${g.name}` : ''; }).filter(Boolean).join(' · ');
+const ST_LBL = { ok: 'In stock', low: 'Running low', out: 'Out of stock', nc: 'Not counted' };
+const stChip = st => `<span class="chip-st ${st}">${ST_LBL[st]}</span>`;
+const ITEM_LBL = { ok: 'Available', low: 'Running low', out: 'Out of stock' };
+function vInventory() {
+  if (A.invErr && !A.inv) return `<div class="card"><p class="err">${esc(A.invErr)}</p></div>`;
+  if (!A.inv) return '<div class="skel"></div>';
+  const V = A.inv, items = V.items;
+  const counted = items.filter(g => g.stock !== null && g.stock !== undefined);
+  const low = items.filter(g => g.state === 'low'), out = items.filter(g => g.state === 'out');
+  const value = counted.reduce((a, g) => a + (g.cost && g.stock > 0 ? g.cost * g.stock : 0), 0);
+  const ed = A.invEdit;
+  const editForm = ed ? `<form class="inline" id="invEditForm">
+      <b>${ed.id ? 'Edit ingredient' : 'New ingredient'}</b>
+      <div class="grid2">
+        <label class="fld" for="ie-name">Name<input id="ie-name" maxlength="60" value="${esc(ed.name || '')}" placeholder="Ej.: Pan de hamburguesa"></label>
+        <label class="fld" for="ie-unit">Unit<select id="ie-unit">${V.units.map(u => `<option ${u === (ed.unit || 'unid') ? 'selected' : ''}>${esc(u)}</option>`).join('')}</select></label>
+        ${ed.id ? '' : `<label class="fld" for="ie-stock">How many you have now<input id="ie-stock" inputmode="decimal" placeholder="Leave empty if not counted"></label>`}
+        <label class="fld" for="ie-low">Warn me when at or below<input id="ie-low" inputmode="decimal" value="${ed.low ?? ''}" placeholder="Ej.: 20"></label>
+        <label class="fld" for="ie-cost">Cost per unit (RD$, optional)<input id="ie-cost" inputmode="decimal" value="${ed.cost ?? ''}" placeholder="Ej.: 15"></label>
+      </div>
+      <div class="srow"><button class="btn sm" type="submit" ${A.invBusy ? 'disabled' : ''}>Save</button><button class="btn ghost sm" type="button" data-invcancel>Cancel</button>
+        ${ed.id ? `<span style="margin-left:auto"></span><button class="btn danger sm" type="button" data-invdel="${esc(ed.id)}">${A.askInvDel === ed.id ? 'Tap again to delete' : 'Delete ingredient'}</button>` : ''}</div>
+    </form>` : '';
+  const mv = A.invMove;
+  const moveForm = g => mv && mv.id === g.id ? `<tr><td colspan="6"><form class="inline" id="invMoveForm">
+      <b>${{ restock: 'Add stock (delivery / purchase)', count: 'Set the real count', waste: 'Remove (spoiled, dropped, used for staff…)' }[mv.type]} · ${esc(g.name)}</b>
+      <div class="grid2"><label class="fld" for="mv-qty">${mv.type === 'count' ? 'How many you have now' : 'Amount'} (${esc(g.unit || 'unid')})<input id="mv-qty" inputmode="decimal" autocomplete="off"></label>
+      <label class="fld" for="mv-note">Note (optional)<input id="mv-note" maxlength="120" placeholder="${mv.type === 'restock' ? 'Ej.: compra en el supermercado' : mv.type === 'waste' ? 'Ej.: se dañó' : 'Ej.: conteo del lunes'}"></label></div>
+      <div class="srow"><button class="btn sm" type="submit" ${A.invBusy ? 'disabled' : ''}>Save</button><button class="btn ghost sm" type="button" data-invcancel>Cancel</button></div>
+    </form></td></tr>` : '';
+  const cats = [{ id: 'all', n: 'All' }].concat(V.cats.filter(c => V.menu.some(m => m.cat === c.id)));
+  const av = V.availability || { items: {}, opts: {} };
+  const re = A.recEdit;
+  const recEditor = key => re && re.key === key ? `<div class="inline" style="grid-column:1/-1">
+      ${re.lines.map((l, i) => { const g = ingById(l.inv); return `<div class="recline">
+        <label class="fld">Ingredient<select data-rl="${i}" data-rf="inv"><option value="">Choose…</option>${items.map(x => `<option value="${esc(x.id)}" ${x.id === l.inv ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+        <label class="fld">Amount ${g ? `<span class="u">(${esc(g.unit)})</span>` : ''}<input data-rl="${i}" data-rf="qty" inputmode="decimal" value="${l.qty ?? ''}"></label>
+        <button class="icon-b" type="button" data-rdel="${i}" aria-label="Remove">${I.trash}</button></div>`; }).join('') || '<div class="hint">No ingredients yet.</div>'}
+      <div class="srow"><button class="btn ghost sm" type="button" data-radd>${I.plus}Add ingredient</button><span style="margin-left:auto"></span>
+        <button class="btn ghost sm" type="button" data-invcancel>Cancel</button><button class="btn sm" type="button" data-rsave ${A.invBusy ? 'disabled' : ''}>Save recipe</button></div>
+    </div>` : '';
+  const recRow = (key, kind, name, lines, st) => `<div class="rec"><span class="nm">${esc(name)}</span>
+      <span class="minirow">${lines && lines.length ? (st && st !== 'ok' ? stChip(st) : '') : ''}<button class="btn ghost sm" data-redit="${esc(key)}" data-rkind="${kind}">${lines && lines.length ? 'Edit' : 'Set recipe'}</button></span>
+      <span class="uses">${lines && lines.length ? esc(usesText(lines)) : 'No recipe: never marked sold out'}</span>${recEditor(key)}</div>`;
+  const menuList = V.menu.filter(m => A.recCat === 'all' || m.cat === A.recCat);
+  const MAIN = ['drink', 'sodaSize', 'yaroa', 'jugo', 'extras'];
+  const allGroups = Object.keys(V.modgroups).filter(g => V.menu.some(m => (m.mods || []).includes(g)));
+  const hasRec = g => V.modgroups[g].opts.some(o => V.optRecipes[g + '|' + o.n]);
+  const groupsUsed = allGroups.filter(g => A.allOpts || MAIN.includes(g) || hasRec(g));
+  const hiddenN = allGroups.length - groupsUsed.length;
+  return `
+  <div class="grid kpis">
+    <div class="card kpi"><small>Ingredients</small><b class="num">${int(items.length)}</b><div class="foot">${int(counted.length)} counted</div></div>
+    <div class="card kpi"><small>Running low</small><b class="num" style="${low.length ? 'color:var(--warn)' : ''}">${int(low.length)}</b></div>
+    <div class="card kpi"><small>Out of stock</small><b class="num" style="${out.length ? 'color:var(--bad)' : ''}">${int(out.length)}</b></div>
+    <div class="card kpi"><small>Stock value</small><b class="num">${money(value)}</b><div class="foot">From cost per unit</div></div>
+  </div>
+  ${low.length || out.length ? `<div class="card sec"><h2>Buy soon</h2><div class="alerts">${out.concat(low).map(g => `<span class="chip-st ${g.state}">${esc(g.name)}: ${qtyF(g.stock)} ${esc(g.unit)}</span>`).join('')}</div>
+    <p class="hint" style="margin:10px 0 0">Menu items that use these show <b>Agotado</b> or <b>Quedan pocos</b> on the register. The register can still sell them; the online app won't sell what is out of stock.</p></div>` : ''}
+  ${A.invMsg ? `<p class="okmsg">${esc(A.invMsg)}</p>` : ''}${A.invErr ? `<p class="err">${esc(A.invErr)}</p>` : ''}
+  <div class="card sec"><h2>Ingredients<span class="sub"><button class="btn sm" data-invnew>${I.plus}Add ingredient</button></span></h2>
+    ${editForm}
+    ${items.length ? `<div class="tablewrap"><table style="min-width:760px"><thead><tr><th>Ingredient</th><th class="r">In stock</th><th class="r">Warn at</th><th class="r">Cost</th><th>Status</th><th></th></tr></thead><tbody>
+      ${items.map(g => { const nc = g.stock === null || g.stock === undefined; return `<tr><td><b>${esc(g.name)}</b><br><span class="tag">${esc(g.unit)}</span></td>
+        <td class="r">${nc ? '<span class="tag">—</span>' : `<span class="stockn num ${g.stock < 0 ? 'neg' : ''}">${qtyF(g.stock)}</span>`}</td>
+        <td class="r num">${g.low ?? '—'}</td><td class="r num">${g.cost != null ? money2(g.cost) : '—'}</td>
+        <td>${stChip(nc ? 'nc' : g.state)}</td>
+        <td><div class="minirow"><button class="btn ghost sm" data-mv="restock" data-id="${esc(g.id)}">+ Add</button><button class="btn ghost sm" data-mv="count" data-id="${esc(g.id)}">Count</button><button class="btn ghost sm" data-mv="waste" data-id="${esc(g.id)}">− Remove</button><button class="btn ghost sm" data-invedit="${esc(g.id)}">Edit</button></div></td></tr>${moveForm(g)}`; }).join('')}
+      </tbody></table></div>`
+      : `<div class="empty">No ingredients yet.<div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" data-invstarter ${A.invBusy ? 'disabled' : ''}>Load RV Kitchen starter list</button><button class="btn ghost" data-invnew>Add my own</button></div>
+          <p class="hint" style="margin-top:10px">The starter list adds 14 ingredients (pan, carne, queso, papas, sodas…) and recipes for your menu. Nothing is counted yet, so nothing is marked sold out until you enter real counts.</p></div>`}
+    <p class="hint" style="margin:10px 0 0"><b>+ Add</b> when supplies arrive, <b>Count</b> to type what is really on the shelf, <b>− Remove</b> for anything spoiled or used outside a sale. Sales from the register and the online app subtract automatically.</p>
+  </div>
+  ${items.length ? `<div class="card sec"><h2>Recipes<span class="sub">What one of each item uses</span></h2>
+    <div class="chips" style="margin-bottom:6px">${cats.map(c => `<button class="chip" data-reccat="${c.id}" aria-pressed="${A.recCat === c.id}">${esc(c.n)}</button>`).join('')}</div>
+    ${menuList.map(m => recRow('item:' + m.id, 'item', m.n, V.recipes[m.id], av.items[m.id])).join('')}
+  </div>
+  <div class="card sec"><h2>Options and extras<span class="sub">Added on top of the item's recipe</span></h2>
+    ${groupsUsed.map(g => `<div style="margin-top:10px"><b class="tag" style="text-transform:uppercase;letter-spacing:.4px">${esc(V.modgroups[g].n)}</b>
+      ${V.modgroups[g].opts.map(o => recRow('opt:' + g + '|' + o.n, 'opt', o.n, V.optRecipes[g + '|' + o.n], av.opts[g + '|' + o.n])).join('')}</div>`).join('')}
+    ${hiddenN > 0 || A.allOpts ? `<div style="margin-top:12px"><button class="btn ghost sm" data-allopts>${A.allOpts ? 'Show fewer options' : 'Show sauces and other options (' + hiddenN + ' groups)'}</button></div>` : ''}
+  </div>
+  <div class="card sec"><h2>History<span class="sub">Latest movements</span></h2>
+    ${V.log.length ? V.log.slice(0, 60).map(l => `<div class="logrow"><span class="w">${esc(new Date(l.at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))}</span>
+      <span><b>${esc({ sale: 'Sale', return: 'Returned (cancelled)', restock: 'Added stock', count: 'Counted', waste: 'Removed' }[l.type] || l.type)}</b>${l.note ? ' · ' + esc(l.note) : ''}<br>
+      <span class="ch">${esc(l.ch.map(([id, d]) => { const g = ingById(id); return (d > 0 ? '+' : '') + qtyF(d) + ' ' + (g ? g.name : '(deleted)'); }).join(', '))}</span></span></div>`).join('') : '<div class="empty">Nothing yet.</div>'}
+  </div>` : ''}`;
+}
+
+/* ---------- render ---------- */
+function render() {
+  const root = $('#root');
+  if (!A.authed) {
+    root.innerHTML = `${DEMO ? '<div class="demo">Demo · sample numbers, nothing here is real</div>' : ''}<main class="wrap">${A.checking && !A.loginErr ? '<div class="login"><div class="skel"></div></div>' : vLogin()}</main>`;
+    const c = $('#code'); if (c) c.focus();
+    return;
+  }
+  const y = scrollY;
+  root.innerHTML = `
+  <header class="top"><div class="wrap">
+    <div class="brand"><span class="lg"><img src="${esc(LOGO)}" alt=""></span><span><b>RV Kitchen Admin</b><small>Owner panel</small></span></div>
+    ${CUSTOMER_URL ? `<a class="tlink hide-s" href="${esc(CUSTOMER_URL)}" target="_blank" rel="noopener">Customer app ↗</a>` : ''}
+    ${DEMO || ON_ADMIN_DOMAIN ? '' : '<a class="tlink hide-s" href="/" target="_blank" rel="noopener">Register ↗</a>'}
+    <button class="tlink" data-signout>Sign out</button>
+  </div></header>
+  ${DEMO ? '<div class="demo">Demo · sample numbers, nothing here is real</div>' : ''}
+  <nav class="tabsbar"><div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-view="sales" aria-selected="${A.view === 'sales'}">Sales</button>
+    <button class="tab" role="tab" data-view="slides" aria-selected="${A.view === 'slides'}">Slideshow</button>
+    <button class="tab" role="tab" data-view="customers" aria-selected="${A.view === 'customers'}">Customers</button>
+    <button class="tab" role="tab" data-view="inventory" aria-selected="${A.view === 'inventory'}">Inventory</button>
+    <button class="tab" role="tab" data-view="settings" aria-selected="${A.view === 'settings'}">Settings</button>
+  </div></nav>
+  <main class="wrap">${notice()}${A.view === 'sales' ? vSales() : A.view === 'slides' ? vSlides() : A.view === 'customers' ? vCustomers() : A.view === 'inventory' ? vInventory() : vSettings()}</main>
+  ${saveBar()}`;
+  window.scrollTo(0, y);
+}
+
+/* ---------- events ---------- */
+document.addEventListener('submit', e => {
+  if (e.target.id === 'loginForm') { e.preventDefault(); const u = ($('#user').value || '').trim(), pw = $('#pass').value || ''; if (u && pw) signIn(u, pw); return; }
+  if (e.target.id === 'pwForm') {
+    e.preventDefault();
+    const body = { user: ($('#pw-user').value || '').trim(), current: $('#pw-cur').value || '', next: $('#pw-new').value || '' };
+    A.pwErr = ''; A.pwMsg = '';
+    if (body.next.length < 6) { A.pwErr = 'The new password must have at least 6 characters.'; render(); return; }
+    A.pwBusy = true; render();
+    call('POST', '/password', body).then(j => { A.pwBusy = false; A.user = j.user; A.defaultPw = false; A.pwMsg = 'Password changed. Use it next time you sign in.'; render(); })
+      .catch(err => { A.pwBusy = false; A.pwErr = err.message; render(); });
+    return;
+  }
+  if (e.target.id === 'invEditForm') {
+    e.preventDefault();
+    const v = id => ($(id) || {}).value;
+    const body = { id: A.invEdit.id, name: (v('#ie-name') || '').trim(), unit: v('#ie-unit'), low: v('#ie-low'), cost: v('#ie-cost') };
+    if (!A.invEdit.id) body.stock = v('#ie-stock');
+    if (!body.name) { A.invErr = 'Write a name for the ingredient.'; render(); return; }
+    invCall('PUT', '/inventory/item', body, 'Ingredient saved.'); return;
+  }
+  if (e.target.id === 'invMoveForm') {
+    e.preventDefault();
+    const qty = ($('#mv-qty').value || '').trim().replace(',', '.');
+    if (qty === '' || !(Number(qty) >= 0)) { A.invErr = 'Write a number (0 or more).'; render(); return; }
+    invCall('POST', '/inventory/move', { inv: A.invMove.id, type: A.invMove.type, qty: Number(qty), note: $('#mv-note').value }, 'Saved.'); return;
+  }
+  if (e.target.id === 'eraseForm') {
+    e.preventDefault();
+    const er = A.er; er.err = ''; er.msg = '';
+    if (($('#er-confirm').value || '').trim().toUpperCase() !== 'ERASE') { er.err = 'Type ERASE in the box to confirm.'; render(); return; }
+    er.busy = true; render();
+    call('POST', '/erase', { orders: er.orders, customers: er.customers, confirm: 'ERASE' }).then(j => {
+      er.busy = false; er.msg = `Done. Erased ${int(j.orders)} order${j.orders === 1 ? '' : 's'} and ${int(j.customers)} customer account${j.customers === 1 ? '' : 's'}.`;
+      A.days = []; A.orders = null; A.ordersKey = ''; A.custs = null; render(); loadSales();
+    }).catch(err => { er.busy = false; er.err = err.message; render(); });
+    return;
+  }
+});
+document.addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) { if (!e.target.closest('#chart')) showTip(null); return; }
+  const d = t.dataset;
+  if ('invstarter' in d) { invCall('POST', '/inventory/starter', {}, 'Starter list loaded. Now use Count to enter what you have.'); return; }
+  if ('invnew' in d) { A.invEdit = { id: '', unit: 'unid' }; A.invMove = null; A.recEdit = null; A.invMsg = ''; render(); const n = $('#ie-name'); if (n) n.focus(); return; }
+  if (d.invedit) { const g = ingById(d.invedit); A.invEdit = Object.assign({}, g); A.invMove = null; A.recEdit = null; A.invMsg = ''; A.askInvDel = ''; render(); return; }
+  if ('invcancel' in d) { A.invEdit = null; A.invMove = null; A.recEdit = null; A.askInvDel = ''; render(); return; }
+  if (d.invdel) { if (A.askInvDel !== d.invdel) { A.askInvDel = d.invdel; render(); return; } invCall('DELETE', '/inventory/item/' + encodeURIComponent(d.invdel), null, 'Ingredient deleted.'); return; }
+  if (d.mv) { A.invMove = { id: d.id, type: d.mv }; A.invEdit = null; A.recEdit = null; A.invMsg = ''; render(); const q = $('#mv-qty'); if (q) q.focus(); return; }
+  if (d.reccat) { A.recCat = d.reccat; render(); return; }
+  if ('allopts' in d) { A.allOpts = !A.allOpts; render(); return; }
+  if (d.redit) {
+    const key = d.redit, V = A.inv, raw = key.slice(key.indexOf(':') + 1);
+    const lines = d.rkind === 'item' ? V.recipes[raw] : V.optRecipes[raw];
+    A.recEdit = { key, kind: d.rkind, raw, lines: (lines || []).map(l => ({ inv: l.inv, qty: l.qty })) };
+    if (!A.recEdit.lines.length) A.recEdit.lines.push({ inv: '', qty: 1 });
+    A.invEdit = null; A.invMove = null; A.invMsg = ''; render(); return;
+  }
+  if ('radd' in d) { A.recEdit.lines.push({ inv: '', qty: 1 }); render(); return; }
+  if (d.rdel != null) { A.recEdit.lines.splice(Number(d.rdel), 1); render(); return; }
+  if ('rsave' in d) {
+    const r = A.recEdit, lines = r.lines.filter(l => l.inv && Number(l.qty) > 0);
+    invCall('PUT', '/inventory/recipe', r.kind === 'item' ? { item: r.raw, lines } : { opt: r.raw, lines }, 'Recipe saved.'); return;
+  }
+  if (d.resetpw) {
+    if (A.askPw !== d.resetpw) { A.askPw = d.resetpw; render(); return; }
+    A.askPw = '';
+    call('POST', '/customers/' + encodeURIComponent(d.resetpw) + '/reset').then(j => { A.temp[d.resetpw] = j.temp; render(); }).catch(err => { A.custErr = err.message; render(); });
+    return;
+  }
+  if (A.askPw) { A.askPw = ''; if (A.view === 'customers') render(); }
+  if (d.del == null && !('resetslides' in d) && (A.askDel >= 0 || A.askReset)) { A.askDel = -1; A.askReset = false; if (A.view === 'slides') render(); }
+  if (d.er) { A.er[d.er] = !A.er[d.er]; A.er.err = ''; A.er.msg = ''; render(); return; }
+  if ('signout' in d) { signOut(); return; }
+  if ('reload' in d) { loadSales(); return; }
+  if ('more' in d) { A.showN += 20; render(); return; }
+  if (d.view) {
+    A.view = d.view; window.scrollTo(0, 0); render();
+    if (A.view === 'slides' && !A.slides) loadSlides();
+    if (A.view === 'customers') loadCustomers();
+    if (A.view === 'inventory') { A.invMsg = ''; loadInv(); }
+    if (A.view === 'sales') loadOrders();
+    return;
+  }
+  if (d.ch) { A.ch = d.ch; render(); return; }
+  if (d.glance) { A.kind = d.glance; A.anchor = A.today; render(); loadOrders(); return; }
+  if (d.kind) { A.kind = d.kind; render(); loadOrders(); return; }
+  if (d.shift) { A.anchor = shift(A.kind, A.anchor, Number(d.shift)); render(); loadOrders(); return; }
+  if (d.metric) { A.metric = d.metric; render(); return; }
+  if (d.col != null) { showTip(t); return; }
+  if ('addslide' in d) { if (A.slides.length >= 12) { A.sErr = 'You can have up to 12 slides.'; render(); return; } photoFor = 'new'; $('#file').value = ''; $('#file').click(); return; }
+  if (d.photo != null) { photoFor = Number(d.photo); $('#file').value = ''; $('#file').click(); return; }
+  if (d.act != null) { const x = A.slides[Number(d.act)]; x.active = !x.active; A.dirty = true; A.sMsg = ''; A.pv = 0; render(); return; }
+  if (d.move != null) { const i = Number(d.move), j = i + Number(d.d); if (j < 0 || j >= A.slides.length) return; const s = A.slides; [s[i], s[j]] = [s[j], s[i]]; A.dirty = true; A.sMsg = ''; A.pv = 0; render(); return; }
+  if (d.del != null) { const i = Number(d.del); if (A.askDel !== i) { A.askDel = i; A.askReset = false; render(); return; } A.askDel = -1; A.slides.splice(i, 1); A.dirty = true; A.sMsg = ''; A.pv = 0; render(); return; }
+  if ('discard' in d) { loadSlides(); return; }
+  if ('saveslides' in d) { saveSlides(); return; }
+  if ('resetslides' in d) {
+    if (!A.askReset) { A.askReset = true; A.askDel = -1; render(); return; }
+    A.askReset = false;
+    call('DELETE', '/slides').then(() => loadSlides()).then(() => { A.sMsg = 'The starter slides are back.'; render(); }).catch(err => { A.sErr = err.message; render(); });
+    return;
+  }
+});
+
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.rl != null && A.recEdit) { const l = A.recEdit.lines[Number(el.dataset.rl)]; if (l) l[el.dataset.rf] = el.dataset.rf === 'qty' ? el.value.replace(',', '.') : el.value; return; }
+  if (el.id === 'cq') { A.custQ = el.value; const pos = el.selectionStart; render(); const c = $('#cq'); if (c) { c.focus(); try { c.setSelectionRange(pos, pos); } catch (x) {} } return; }
+  if (el.id === 'secs') { const v = Math.round(Number(el.value)); if (v >= 2 && v <= 30) { A.seconds = v; markDirty(); schedPreview(); const s = document.querySelector('.card h2 .sub'); if (s) s.textContent = 'Changes every ' + v + ' seconds'; } return; }
+  if (el.dataset.f && el.dataset.i != null) { const x = A.slides[Number(el.dataset.i)]; if (!x) return; x[el.dataset.f] = el.value; markDirty(); refreshPreview(); }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'file' && e.target.files && e.target.files[0]) onPhoto(e.target.files[0]);
+  if (e.target.dataset && e.target.dataset.rl != null && A.recEdit) { const l = A.recEdit.lines[Number(e.target.dataset.rl)]; if (l) { l[e.target.dataset.rf] = e.target.value; if (e.target.dataset.rf === 'inv') render(); } return; }
+  if (e.target.dataset && e.target.dataset.f === 'itemId') { const x = A.slides[Number(e.target.dataset.i)]; if (x) { x.itemId = e.target.value; markDirty(); } }
+});
+document.addEventListener('pointerover', e => { if (e.pointerType !== 'mouse') return; const c = e.target.closest && e.target.closest('.col'); if (c) showTip(c); });
+document.addEventListener('pointerout', e => { if (e.pointerType !== 'mouse') return; if (e.target.closest && e.target.closest('.cols') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.cols'))) showTip(null); });
+document.addEventListener('focusin', e => { const c = e.target.closest && e.target.closest('.col'); if (c) showTip(c); });
+addEventListener('beforeunload', e => { if (A.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- start ---------- */
+render();
+schedPreview();
+if (TOKEN) startSession();
+</script>
+</body>
+</html>

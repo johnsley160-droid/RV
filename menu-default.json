@@ -1,0 +1,542 @@
+{
+ "cats": [
+  {
+   "id": "combos",
+   "n": "Combos",
+   "e": "🍔"
+  },
+  {
+   "id": "burgers",
+   "n": "Hamburguesas",
+   "e": "🍔"
+  },
+  {
+   "id": "papas",
+   "n": "Papas y Yaroas",
+   "e": "🍟"
+  },
+  {
+   "id": "pollo",
+   "n": "Pollo",
+   "e": "🍗"
+  },
+  {
+   "id": "antojitos",
+   "n": "Antojitos",
+   "e": "🌮"
+  },
+  {
+   "id": "bebidas",
+   "n": "Bebidas",
+   "e": "🥤"
+  }
+ ],
+ "modgroups": {
+  "drink": {
+   "n": "Bebida del combo",
+   "type": "radio",
+   "req": true,
+   "opts": [
+    {
+     "n": "Coca-Cola",
+     "p": 0
+    },
+    {
+     "n": "Coca-Cola Zero",
+     "p": 0
+    },
+    {
+     "n": "Sprite",
+     "p": 0
+    },
+    {
+     "n": "Fanta",
+     "p": 0
+    },
+    {
+     "n": "Country Club",
+     "p": 0
+    },
+    {
+     "n": "Agua",
+     "p": 0
+    },
+    {
+     "n": "Jugo natural",
+     "p": 75
+    }
+   ]
+  },
+  "sodaSize": {
+   "n": "Tamaño",
+   "type": "radio",
+   "req": true,
+   "opts": [
+    {
+     "n": "Pequeña",
+     "p": 0
+    },
+    {
+     "n": "Grande",
+     "p": 25
+    }
+   ]
+  },
+  "yaroa": {
+   "n": "Carne de la yaroa",
+   "type": "radio",
+   "req": true,
+   "opts": [
+    {
+     "n": "Pollo",
+     "p": 0
+    },
+    {
+     "n": "Salami",
+     "p": 0
+    },
+    {
+     "n": "Mixta",
+     "p": 25
+    }
+   ]
+  },
+  "jugo": {
+   "n": "Sabor del jugo",
+   "type": "radio",
+   "req": true,
+   "opts": [
+    {
+     "n": "Chinola",
+     "p": 0
+    },
+    {
+     "n": "Limón",
+     "p": 0
+    },
+    {
+     "n": "Naranja",
+     "p": 0
+    },
+    {
+     "n": "Lechosa",
+     "p": 0
+    },
+    {
+     "n": "Piña",
+     "p": 0
+    }
+   ]
+  },
+  "extras": {
+   "n": "Agregar",
+   "type": "multi",
+   "opts": [
+    {
+     "n": "Queso extra",
+     "p": 50
+    },
+    {
+     "n": "Salami",
+     "p": 50
+    },
+    {
+     "n": "Pollo",
+     "p": 75
+    },
+    {
+     "n": "Tocineta",
+     "p": 60
+    },
+    {
+     "n": "Huevo",
+     "p": 40
+    },
+    {
+     "n": "Aguacate",
+     "p": 50
+    }
+   ]
+  },
+  "quitar": {
+   "n": "Quitar",
+   "type": "multi",
+   "opts": [
+    {
+     "n": "Sin cebolla",
+     "p": 0
+    },
+    {
+     "n": "Sin lechuga",
+     "p": 0
+    },
+    {
+     "n": "Sin tomate",
+     "p": 0
+    },
+    {
+     "n": "Sin repollo",
+     "p": 0
+    },
+    {
+     "n": "Sin salsa",
+     "p": 0
+    },
+    {
+     "n": "Sin queso",
+     "p": 0
+    }
+   ]
+  },
+  "salsa": {
+   "n": "Salsas",
+   "type": "multi",
+   "opts": [
+    {
+     "n": "Ketchup",
+     "p": 0
+    },
+    {
+     "n": "Mayonesa",
+     "p": 0
+    },
+    {
+     "n": "Mostaza",
+     "p": 0
+    },
+    {
+     "n": "Salsa de ajo",
+     "p": 0
+    },
+    {
+     "n": "Picante",
+     "p": 0
+    },
+    {
+     "n": "BBQ",
+     "p": 0
+    }
+   ]
+  },
+  "punto": {
+   "n": "Término de la carne",
+   "type": "radio",
+   "opts": [
+    {
+     "n": "Tres cuartos",
+     "p": 0
+    },
+    {
+     "n": "Bien cocida",
+     "p": 0
+    }
+   ]
+  }
+ },
+ "items": [
+  {
+   "id": "c1",
+   "cat": "combos",
+   "n": "Combo 1",
+   "p": 350,
+   "e": "🍔",
+   "d": "Hamburger + papas + soda",
+   "tag": "Top",
+   "mods": [
+    "drink",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "c2",
+   "cat": "combos",
+   "n": "Combo 2",
+   "p": 400,
+   "e": "🍔",
+   "d": "Cheeseburger + papas + soda",
+   "mods": [
+    "drink",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "c3",
+   "cat": "combos",
+   "n": "Combo 3",
+   "p": 450,
+   "e": "🍗",
+   "d": "Burger pollo + papas + soda",
+   "mods": [
+    "drink",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "c4",
+   "cat": "combos",
+   "n": "Combo 4",
+   "p": 500,
+   "e": "🍔",
+   "d": "Double burger + papas + soda",
+   "tag": "Top",
+   "mods": [
+    "drink",
+    "quitar",
+    "salsa",
+    "punto"
+   ]
+  },
+  {
+   "id": "cy",
+   "cat": "combos",
+   "n": "Combo Yaroa",
+   "p": 400,
+   "e": "🧀",
+   "d": "Yaroa grande + soda",
+   "mods": [
+    "yaroa",
+    "drink",
+    "salsa"
+   ]
+  },
+  {
+   "id": "cf",
+   "cat": "combos",
+   "n": "Combo Familia",
+   "p": 900,
+   "e": "👨‍👩‍👧",
+   "d": "3 hamburgers + papas grande + 3 sodas",
+   "tag": "Familia",
+   "mods": [
+    "drink",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "b1",
+   "cat": "burgers",
+   "n": "Hamburger Clásico",
+   "p": 250,
+   "e": "🍔",
+   "d": "Carne, lechuga, tomate",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa",
+    "punto"
+   ]
+  },
+  {
+   "id": "b2",
+   "cat": "burgers",
+   "n": "Cheeseburger",
+   "p": 300,
+   "e": "🧀",
+   "d": "Con queso americano",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa",
+    "punto"
+   ]
+  },
+  {
+   "id": "b3",
+   "cat": "burgers",
+   "n": "Double Burger",
+   "p": 400,
+   "e": "🍔",
+   "d": "Doble carne, doble queso",
+   "tag": "Top",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa",
+    "punto"
+   ]
+  },
+  {
+   "id": "b4",
+   "cat": "burgers",
+   "n": "Burger Pollo",
+   "p": 300,
+   "e": "🍗",
+   "d": "Pechuga empanizada",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "s1",
+   "cat": "papas",
+   "n": "Papas Fritas",
+   "p": 150,
+   "e": "🍟",
+   "d": "Papas doradas",
+   "mods": [
+    "salsa"
+   ]
+  },
+  {
+   "id": "s2",
+   "cat": "papas",
+   "n": "Papas con Salami",
+   "p": 200,
+   "e": "🍟",
+   "d": "Con salami y queso",
+   "mods": [
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "s3",
+   "cat": "papas",
+   "n": "Papas con Pollo",
+   "p": 300,
+   "e": "🍟",
+   "d": "Con pollo y queso",
+   "mods": [
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "s4",
+   "cat": "papas",
+   "n": "Papas Mixtas",
+   "p": 350,
+   "e": "🍟",
+   "d": "Pollo y salami",
+   "mods": [
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "y1",
+   "cat": "papas",
+   "n": "Yaroa Pequeña",
+   "p": 250,
+   "e": "🧀",
+   "d": "Papas, carne, queso y salsas",
+   "mods": [
+    "yaroa",
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "y2",
+   "cat": "papas",
+   "n": "Yaroa Grande",
+   "p": 350,
+   "e": "🧀",
+   "d": "Porción grande",
+   "tag": "Top",
+   "mods": [
+    "yaroa",
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "p1",
+   "cat": "pollo",
+   "n": "Pollo Frito + Papas",
+   "p": 350,
+   "e": "🍗",
+   "d": "Presas fritas con papas",
+   "mods": [
+    "salsa"
+   ]
+  },
+  {
+   "id": "p2",
+   "cat": "pollo",
+   "n": "Sandwich Pollo",
+   "p": 300,
+   "e": "🥪",
+   "d": "Pollo en pan suave",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "a1",
+   "cat": "antojitos",
+   "n": "Hot Dog",
+   "p": 200,
+   "e": "🌭",
+   "d": "Salchicha con salsas",
+   "mods": [
+    "extras",
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "a2",
+   "cat": "antojitos",
+   "n": "Tacos",
+   "p": 250,
+   "e": "🌮",
+   "d": "Tacos de la casa",
+   "mods": [
+    "quitar",
+    "salsa"
+   ]
+  },
+  {
+   "id": "a3",
+   "cat": "antojitos",
+   "n": "Nachos",
+   "p": 250,
+   "e": "🧀",
+   "d": "Con queso y carne",
+   "mods": [
+    "extras",
+    "salsa"
+   ]
+  },
+  {
+   "id": "d1",
+   "cat": "bebidas",
+   "n": "Soda",
+   "p": 75,
+   "e": "🥤",
+   "d": "Coca-Cola, Sprite, Fanta",
+   "mods": [
+    "sodaSize"
+   ]
+  },
+  {
+   "id": "d2",
+   "cat": "bebidas",
+   "n": "Jugo Natural",
+   "p": 150,
+   "e": "🧃",
+   "d": "Chinola, limón, naranja",
+   "mods": [
+    "jugo"
+   ]
+  },
+  {
+   "id": "d3",
+   "cat": "bebidas",
+   "n": "Agua",
+   "p": 50,
+   "e": "💧",
+   "d": "Botella",
+   "mods": []
+  }
+ ]
+}

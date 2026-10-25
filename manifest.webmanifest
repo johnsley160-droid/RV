@@ -1,0 +1,48 @@
+{
+  "id": "/",
+  "name": "RV Kitchen Fast Food · Punto de Venta",
+  "short_name": "RV Kitchen",
+  "description": "Sistema de punto de venta para RV Kitchen Fast Food: órdenes, pantalla de cocina, menú, empleados y reportes.",
+  "lang": "es-DO",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#0B0908",
+  "theme_color": "#0B0908",
+  "categories": ["business", "food", "productivity"],
+  "prefer_related_applications": false,
+  "launch_handler": { "client_mode": "navigate-existing" },
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nueva orden",
+      "short_name": "Vender",
+      "description": "Abrir la caja para tomar una orden",
+      "url": "/?v=pos",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pantalla de cocina",
+      "short_name": "Cocina",
+      "description": "Ver las órdenes en preparación",
+      "url": "/?v=kds",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Reportes",
+      "short_name": "Reportes",
+      "description": "Ventas del día y rendimiento por empleado",
+      "url": "/?v=reports",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
